@@ -18,20 +18,18 @@ def parseVmess(vmesslink):
     vms = base64.b64decode(bs).decode()
     return json.loads(vms)
 
-def process(item):
-    if item.startswith(vmscheme):
-        try:
-            return vmess_results.add(parseVmess(item))
-        except:
-            return
-    if item.startswith(telegram_proxy):
-        telegram_results.add(item)
-
 def toParagraph(vmess):
     return '''地址 (Address) = %s
- 端口 (Port) = %s
- 用户ID (User ID / UUID) = %s
- 额外ID (Alter Id) = %s''' % (vmess['host'], vmess['port'], vmess['id'], vmess['aid'])
+端口 (Port) = %s
+用户ID (User ID / UUID) = %s
+额外ID (Alter Id) = %s''' % (vmess['host'], vmess['port'], vmess['id'], vmess['aid'])
+
+
+def process(item):
+    if item.startswith(vmscheme):
+        vmess_results.add(toParagraph(parseVmess(item)))
+    if item.startswith(telegram_proxy):
+        telegram_results.add(item)
 
 for subdir, dirs, files in os.walk('data'):
     for file in files:
@@ -41,7 +39,7 @@ for subdir, dirs, files in os.walk('data'):
                 for item in line.split():
                     process(item)
 
-S1 = '请在各个平台（mac/windows/linus, ios/andriod）安装V2Ray之后输入以下配置，即可登录谷歌，脸书，油管等网站。'
+S1 = '请在各个平台（mac/windows/linus, ios/andriod）安装V2Ray之后输入以下配置，即可登录谷歌，脸书，油管等网站。\n'
 S2 = '以下是一些Telegram上的proxy，也欢迎用：'
 # This is all ok to commit, not commited by mistake.
 S3 = '''如果您不想安装app 用电脑端想翻墙的话，可用网页型翻墙，站点如下：
@@ -56,9 +54,8 @@ Facebook读书群：https://www.facebook.com/groups/reading.sharing/
 
 节点由 https://t.me/cnhumanright99, https://t.me/jianjiaobuluo 等提供'''
 result = [S1]
-for x in random.sample(vmess_results, 3):
-    result.append(toParagraph(x))
+result += random.sample(vmess_results, min(3, len(vmess_results)))
 result.append(S2)
-result += random.sample(telegram_results, 3)
+result += random.sample(telegram_results, min(3, len(telegram_results)))
 result.append(S3)
 print('\n'.join(result))
