@@ -58,10 +58,10 @@ Facebook读书群：https://www.facebook.com/groups/reading.sharing/
 节点由 https://t.me/cnhumanright99, https://t.me/jianjiaobuluo 等提供。'''
 result = [S1]
 count = 0
-for item in random.sample(vmess_results, min(3, len(vmess_results))):
+for item in random.sample(vmess_results, min(10, len(vmess_results))):
     count += 1
     result.append('设置' + str(count) + ':\n' + item + '\n')
 result.append(S2)
-result += random.sample(telegram_results, min(3, len(telegram_results)))
+result += random.sample(telegram_results, min(10, len(telegram_results)))
 result.append(S3)
 print('\n'.join(result))
