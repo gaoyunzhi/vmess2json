@@ -28,7 +28,10 @@ def toParagraph(vmess):
 def process(item):
     if item.startswith(vmscheme):
         try:
-            vmess_results.add(toParagraph(parseVmess(item)))
+            r = parseVmess(item)
+            ping = os.popen('nmap -p %s %s' % (r['port'], r['host'])).read()
+            if 'open' in ping:
+                vmess_results.add(toParagraph(r))
         except Exception as e:
             return
     if item.startswith(telegram_proxy):
